@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////
 //  Model.as
 //  Macromedia ActionScript Implementation of the Class Model
-//  Created on:      2016-6-22 上午10:58:49
+//  Created on:      2019-04-01 上午21:58:49
 //  Original author: Zhangwei
 ///////////////////////////////////////////////////////////
 
