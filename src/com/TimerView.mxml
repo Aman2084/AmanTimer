@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" width="640" height="480"
+		   horizontalScrollPolicy="off" verticalScrollPolicy="off" initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.aman.event.ZEvent;
+			import com.aman.utils.Utils;
+			
+			import mx.events.FlexEvent;
+			private var _data:Model;
+			
+			private function init($e:FlexEvent):void{
+				var str:String = "已用时长：1小时23分40秒" +
+					"开始时间：22:34"
+			}
+			
+			private function onClick($e:MouseEvent):void{
+				if(!_data){
+					return
+				}
+				switch($e.currentTarget){
+					case btn_start:
+						if(_data.state==Model.State_Pause){
+							_data.resume();
+						}else if(_data.state==Model.State_Stop){
+							_data.start();
+						}
+						
+						break
+					case btn_stop:
+						_data.stop()
+						break
+					case btn_pause:
+						_data.pause();
+						break
+				}
+			}
+			
+			public function setData($o:Model):void{
+				_data = $o;
+				_data.addEventListener(ZEvent.Update , onModelUpdate);
+				_data.addEventListener(ZEvent.State , onModelState);
+			}
+			
+			private function onModelUpdate($e:ZEvent):void{
+				var d:Date = new Date();
+				d.setTime(_data.time_start);
+				var t:int = _data.interval / 1000;
+				var str:String = "开始时间：" + Utils.getTimeStr(d) + "\n" + 
+					"总共耗时：" + Utils.sec2timeStr(t);
+				txt.text = str;
+			}
+			
+			
+			private function onModelState($e:Event):void{
+				switch(_data.state){
+					case Model.State_Run:
+						btn_start.enabled = false;
+						break
+					case Model.State_Pause:
+						btn_start.enabled = true;
+						btn_start.label = "继续"
+						break
+					case Model.State_Stop:
+						btn_start.enabled = true;
+						btn_start.label = "开始"
+						break
+				}
+			}
+			
+			protected function onText($e:Event):void{
+				switch($e.type){
+					case FocusEvent.FOCUS_OUT:
+						title.editable = title.selectable = false;
+						break
+					case MouseEvent.CLICK:
+						title.editable = title.selectable = true;
+						title.setSelection(0 , title.text.length)
+						break
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<mx:TextInput id="title"
+		y="5" width="100%" height="45" fontSize="20" textAlign="center" text="当前任务" 
+		editable="false" click="onText(event)" focusOut="onText(event)"/>
+	
+	<mx:TextArea id="txt"
+				 editable="false" fontSize="16"
+				 x="20" y="{title.height + 10}" width="600" height="200"/>
+	
+	<mx:HBox 
+		width="100%" height="30" bottom="30"
+		verticalAlign="middle" horizontalGap="10" paddingLeft="10" buttonMode="true" fontSize="14">
+		<mx:Button id="btn_start" click="onClick(event)" label="开始"/>
+		<mx:Button id="btn_pause" click="onClick(event)" label="暂停"/>
+		<mx:Button id="btn_stop" click="onClick(event)" label="结束"/>
+	</mx:HBox>
+</mx:Canvas>

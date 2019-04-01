@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" xmlns:com="com.*"
+						horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+						minWidth="640" minHeight="480"
+						resize="onResize(event)" initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.Model;
+			
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			private var _mode:Model;
+			
+			private function onResize($e:ResizeEvent):void{
+				if(!this.initialized){
+					return
+				}
+				view.x = (this.width - view.width) / 2;
+				view.y = (this.height - view.height) / 2;
+			}
+			
+			private function init($e:FlexEvent):void{
+				onResize(null)
+				_mode = new Model();
+				view.setData(_mode)
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<com:TimerView id="view" width="640" height="480"/>
+</mx:WindowedApplication>
